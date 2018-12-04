@@ -3,28 +3,83 @@ syntax on
 filetype plugin indent on
 
 " NERDTree
-map <silent> <C-n> :NERDTreeToggle<CR>
+nnoremap <silent> <C-n> :NERDTreeToggle<CR>
+" let g:netrw_winsize = 10
+" nnoremap <C-L> :Vexplore<CR>
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
 
-" buffer
-map <C-h> :bprev<CR>
-map <C-l> :bnext<CR>
-command Bd bp|bd #
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Please view 'help: <command>' for information
 
-set hls
-set nu
+"
+" basic settings
+"
+" set cursorline   " highlight cursor current line
+set hls          " highlight search
+set nu           " show line number
+"set rnu          " show relative line number
 
-set expandtab " softtab
-set softtabstop=4 " softtab size
-set shiftwidth=4 " indentation space
-set autoindent
+set expandtab    " convert key <Tab> into spaces ("softtab")
+set softtabstop=4    " set softtab size (number of spaces)
+set shiftwidth=4 " set indentaion spaces
+set autoindent " auto indent on newline. When pasting, you could ':set paste' to avoid it's effects; And ':set nopaste' to revert back
 
 set nowrap
 set scrolloff=3 " remain 3 lines when scroll to the bottom
 
+" when typing ':' command
 set wildmenu " show menu when <tab>
 
+"
+" some good macros
+"
+" Tips: Enter special character with <Ctrl-v><Key> in insert mode
+" Tips: You can :reg to view your recorded macros
+"       (but copying reg cannot deal with special characters!!!)
+let @c = 'I# j^'
+let @p = 'yeoprint(f"{pa}")l%ll' " print(f'{myvar}')
+let @l = 'yeologging.info(f"{pa}")l%ll' " logging.info(f'{myvar}')
 
+"
+" disable some annoying formatting
+"
+" See :help fo-table for more information
+" Don't need actually, you can get rid of them by <CTRL+U> in insert mode
+" set formatoptions-=c
+" set formatoptions-=r
+" set formatoptions-=o
+
+"
+" fix some annoying indentation
+"
+" /usr/share/vim/vim80/indent.vim is commented out!!
+" set nosmartindent
+" set cindent
+" set cinkeys-=0#
+" set indentkeys-=0#
+
+" 
+" buffer
+"
+set hidden
+" Switch buffer shortcut
+nnoremap <silent> <C-h> :bp<CR>
+nnoremap <silent> <C-l> :bn<CR>
+" Trick to deleting buffer without affecting the window layout
+" See: https://superuser.com/questions/289285/how-to-close-buffer-without-closing-the-window
+command Bd bp|sp|bn|bd
+" See: https://stackoverflow.com/questions/4465095/vim-delete-buffer-without-losing-the-split-window
+" command Bd bp\|bd \#
+
+"
+" different file types
+"
+" .m .oct (octave file) Can 'K' words in octave .m file
+autocmd FileType matlab setlocal keywordprg=info\ octave\ --vi-keys\ --index-search
+augroup filetypedetect
+  au! BufRead,BufNewFile *.m,*.oct set filetype=octave
+augroup END
+" .yaml file
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
